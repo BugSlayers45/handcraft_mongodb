@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { validationResult } from "express-validator";
 import { Admin } from "../model/admin.model.js";
+import Jwt  from "jsonwebtoken";
 
 export const signUp = async (request, response, next) => {
     const errors = await validationResult(request);
@@ -17,4 +18,29 @@ export const signUp = async (request, response, next) => {
             console.log(err);
             return response.status(500).json({ error: "Internal server error", status: false });
         })
+}
+
+export const signIn = async (request, response, next) => {
+    try {
+        let admin = await Admin.findOne({ email: request.body.email });
+        if (admin) {
+            let status = await bcrypt.compare(request.body.password, admin.password);
+            if (status) {
+                let payload = { subject: Admin.email };
+                let token = Jwt.sign(payload, 'fkjdfhfflfglkfaslfgdlf')
+                admin = admin.toObject();
+                delete admin.password;
+                console.log(admin);
+                return response.status(200).json({ message: "signin seccess", token:token, status: true });
+            }
+            else
+                return response.status(401).json({ error: "Unauthorized user", status: false });
+        }
+        else
+            return response.status(401).json({ error: "Unauthorized user", status: false });
+    }
+    catch (err) {
+        console.log(err);
+        return response.status(500).json({ error: "Internal Server Error", status: false });
+    }
 }

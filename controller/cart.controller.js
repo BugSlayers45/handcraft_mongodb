@@ -20,7 +20,6 @@ export const addtocart = async (request, response, next) => {
       }
     }
     else {
-      // Cart not exists
       let saveCart = await Cart.create({
         customerId: request.body.customerId,
         cartItem: [{ productId: request.body.productId }]

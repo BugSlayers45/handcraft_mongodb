@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 import { Admin } from "../model/admin.model.js";
 import Jwt from "jsonwebtoken";
 import { Seller } from "../model/seller.model.js";
+import { Customer } from "../model/customer.model.js";
 
 export const signUp = async (request, response, next) => {
     const errors = await validationResult(request);
@@ -47,11 +48,33 @@ export const signIn = async (request, response, next) => {
 }
 
 export const sellerAproval = async (request, response, next) => {
-    const seller = await Seller.findByIdAndUpdate(request.params.id,{
-            status: request.body.status
-        }
+    const seller = await Seller.findByIdAndUpdate(request.params.id, {
+        status: "Active"
+    }
     )
     if (!seller)
         return response.status(400).send('this seller cannot fount...')
     return response.status(200).json({ message: "successfull aprovel... ", status: true });
+}
+
+export const customerCount = (request, response, next) => {
+    const count = Customer.find()
+        .then(function (models) {
+            return response.status(200).json({ customer: models.length, status: true });
+        })
+        .catch(function (err) {
+            console.log(err);
+            return response.status(500).json({ error: "Internal server error", status: false });
+        });
+}
+
+export const sellercount = (request, response, next) => {
+    const count = Seller.find()
+        .then(function (models) {
+            return response.status(200).json({seller: models.length, status: true });
+        })
+        .catch(function (err) {
+            console.log(err);
+            return response.status(500).json({ error: "Internal server error", status: false });
+        });
 }

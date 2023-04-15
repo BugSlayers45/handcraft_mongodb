@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const productSchema = new mongoose.Schema({
     id: {
         type: Number
@@ -24,7 +23,9 @@ const productSchema = new mongoose.Schema({
         type: Number
     },
     categoryId: {
-        type: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+        required: true
     },
     thumbnail: {
         type: String
@@ -33,11 +34,15 @@ const productSchema = new mongoose.Schema({
         type: []
     },
     sellerId: {
-        type: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "seller",
+        required: true
+
     },
     keyword: {
         type: String
     }
 })
+
 export const Product = mongoose.model("product", productSchema);
 

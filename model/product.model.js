@@ -22,10 +22,10 @@ const productSchema = new mongoose.Schema({
     stock: {
         type: Number
     },
-    categoryId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'category',
-        required:true
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+        required: true
     },
     thumbnail: {
         type: String
@@ -33,10 +33,11 @@ const productSchema = new mongoose.Schema({
     images: {
         type: []
     },
-    sellerId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'seller',
-        required:true
+    sellerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "seller",
+        required: true
+
     },
     keyword: {
         type: String

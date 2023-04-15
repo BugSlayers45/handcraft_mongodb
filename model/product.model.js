@@ -24,7 +24,9 @@ const productSchema = new mongoose.Schema({
         type: Number
     },
     categoryId: {
-        type: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+        required: true
     },
     thumbnail: {
         type: String
@@ -33,7 +35,9 @@ const productSchema = new mongoose.Schema({
         type: []
     },
     sellerId: {
-        type: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "seller",
+        required: true
     },
     keyword: {
         type: String

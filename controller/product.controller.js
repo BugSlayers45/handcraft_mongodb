@@ -56,8 +56,6 @@ export const removeProduct = async (request, response, next) => {
     }
 }
 
-
-
 export const viewProduct = async (request, response, next) => {
     try {
         let product = await Product.find()
@@ -101,5 +99,3 @@ export const getProductByCategory = (request, response, next) => {
             return response.status(500).json({ error: "Internal Server", status: false });
         })
 }
-
-

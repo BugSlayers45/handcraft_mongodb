@@ -53,7 +53,6 @@ export const removeProduct = async (request, response, next) => {
     } catch (err) {
         console.log(err);
         return response.status(500).json({ message: "Internal server error", status: false });
-
     }
 }
 
@@ -100,4 +99,3 @@ export const getProductByCategory = (request, response, next) => {
             return response.status(500).json({ error: "Internal Server", status: false });
         })
 }
-

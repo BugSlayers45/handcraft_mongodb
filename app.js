@@ -7,7 +7,6 @@ import ProductRouter from "./routes/product.route.js";
 import AdminRouter from "./routes/admin.js";
 import CategoryRouter from "./routes/category.route.js";
 import CustomerRouter from "./routes/customer.route.js";
-import ProductRouter from "./routes/product.route.js";
 import CartRouter from "./routes/cart.route.js";
 
 

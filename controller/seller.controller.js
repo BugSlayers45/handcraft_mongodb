@@ -29,8 +29,6 @@ export const SignIn = async (request, response, next) => {
         if (status) {
             let payload = { subject: seller.sellerEmail };
             let token = Jwt.sign(payload, "bughgdfhgdhghdghghhg");
-
-
             seller = seller?.toObject();
             delete seller?.sellerPassword;
             return status ? response.status(200).json({ message: "SignIn Successful", token: token, status: true }) : response.status(400).json({ error: "Bad request", status: false });

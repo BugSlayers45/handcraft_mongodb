@@ -22,4 +22,28 @@ export const getProductById = (request, response, next) => {
 }
 
 
+// export const saveallproduct = (request, response, next) => {
+//     Product.create(request.body.products)
+//         .then(result => {
+//             return response.status(200).json({ message: "Product saved...", status: true })
+//         })
+//         .catch(err => {
+//             console.log(err);
+//             return response.status(500).json({ error: "Internal server error", status: false });
+//         })
+// }
+
+
+
+export const getProductByCategory = (request, response, next) => {
+    Product.find({ categoryId: request.params.categoryId })
+        .then(result => {
+            return response.status(200).json({products:result,status: true });
+        }).catch(err => {
+            console.log(err);
+            return response.status(500).json({ error: "Internal Server", status: false });
+        })
+}
+
+
 

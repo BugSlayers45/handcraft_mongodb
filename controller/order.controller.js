@@ -49,7 +49,7 @@ else{
 }
 
 
-export const orderDetails = async (request, response, next) => {
+export const orderDetailsByCustomerIdorOrderId = async (request, response, next) => {
     try {
         const customer=await Customer.findById({_id:request.body.id})||await Order.findById({_id:request.body.id})
         console.log(customer)

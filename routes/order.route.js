@@ -7,6 +7,6 @@ import { verifyToken } from "../middleware/tokenVerification.js";
 const router=express.Router();
 router.post("/buynow",verificationToken,placeOrder)
 router.get("/orderdetail",orderDetailsByCustomerIdorOrderId)
-router.get("/updateorderstatus",updateOrder)
+router.get("/updateorderstatus/:orderId",updateOrder)
 
 export default router

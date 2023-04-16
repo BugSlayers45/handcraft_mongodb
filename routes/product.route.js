@@ -1,4 +1,5 @@
 import express from "express";
+
 import { Save, getProductByCategory, getProductById, productListBySellerId, removeProduct, updateproducts, viewProduct } from "../controller/product.controller.js";
 import verifyTokenForSeller from "../middlewares/tokenVerification.js";
 

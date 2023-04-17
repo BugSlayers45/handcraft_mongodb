@@ -121,3 +121,20 @@ export const productAdd = (request, response, next) => {
     //     response.status(200).json({message:"saved...."});
     //   });
 }
+
+export const search= async(request,response,next)=>{
+    try{
+     let searchResult=await Product.find({$or:[{title:{$regex:request.params.keyword,$options:"i"}},
+                                                {keyword:{$regex:request.params.keyword,$options:"i"}},
+                                                {description:{$regex:request.params.keyword,$options:"i"}}]})
+       if(searchResult.length>0)
+       return response.status(200).json({Product:searchResult,status:true})
+       else
+       return response.status(401).json({result:"NO result found",status:false}) 
+    }
+    catch(err){
+     console.log(err)
+     return response.status(500).json({error:err,status:false})
+    }
+ }
+

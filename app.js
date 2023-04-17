@@ -29,6 +29,7 @@ app.use("/seller", SellerRouter);
 app.use("/product", ProductRouter);
 app.use("/admin", AdminRouter);
 app.use("/category", CategoryRouter);
+
 app.use("/order",OrderRouter);
 app.use('/wishlist',WishlistRouter);
 

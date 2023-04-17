@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 
 const OrderSchema = new mongoose.Schema({
-    userId: {
+    customerid: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user"
+        ref: "customer"
     },
-    date: {
+    date:{
         type: Date,
         default: Date.now,
     },

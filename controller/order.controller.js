@@ -34,7 +34,6 @@ export const order = async (request, response, next) => {
             to: email.customerEmail,
             subject: 'Order Confirmation',
             // text: deliveryAddress+"",
-            // text: text pr hi likhna padega
             html: '<b>Hey Dear! </b><br> Your order confirm and ready to deliverd<br/><br/>' + contactPerson + "<br/>" + deliveryAddress + "<br/>" + contactNumber + "<br/>" + billAmount,
         };
         transporter.sendMail(mailData, (error, info) => {
@@ -159,3 +158,45 @@ export const updateOrder = async (request, response, next) => {
 
     }
 }
+
+
+
+export const orderDetailsBySeller = async (request, response, next) => {
+    try {
+        const order = await Order.findOne().populate({
+            path: "orderItem",
+            populate: { path: "product", match : {sellerId : request.body.id}}
+        })
+        console.log(order);
+        //let orders = order[1];
+        if (order.length==0)
+            return response.status(401).json({ message: "NO order Found" });
+            return response.status(200).json({ order, status: true })
+        
+    }
+    catch (err) {
+        console.log(err)
+        return response.status(500).json({ error: "INTERNAL SERVER ERROR" })
+    }
+}
+export const viewOrder = async (request, response, next) => {
+    try {
+        const order = await Order.findById(request.body.id)
+        .populate({
+          path: 'product',
+          populate: {
+            path: 'product',
+            select: '-_id name sellerId',
+            match: { sellerId: request.body.sellerId }
+          }
+        })
+        .exec();
+      console.log(order);
+      return response.status(200).json({ cart: order, status: true })
+  
+    }
+    catch (err) {
+      console.log(err)
+      return response.status(500).json({ error: "INTERNAL SERVER ERROR", status: false })
+    }
+  }

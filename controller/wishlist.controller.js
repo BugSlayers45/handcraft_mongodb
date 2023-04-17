@@ -42,15 +42,25 @@ export const fetchWishlist = async (request, response, next) => {
 
 export const removeWishlist = async (request, response, next) => {
   try {
-    let wishlist = await Wishlist.find({ customerId: request.params.customerId })
-    if (!wishlist)
-      return response.status(404).json({ error: "Bad request", status: false });
-  
-    let status = await Wishlist.findByIdAndRemove({wishlistItems:{_id: request.body.productId }});
-    console.log(status);
-    return response.status(200).json({ message: "Product removed in wishlist", status: true })
-
-  } catch (err) {
+    let wishlist = await Wishlist.findOne({ customerId: request.body.customerId })
+    if (wishlist) {
+      let wishlistItemsList = wishlist.wishlistItems;
+      let index = wishlistItemsList.findIndex((item) => item.productId == request.body.productId)
+      console.log(index)
+      if (index != -1){
+        wishlist.wishlistItems.splice(index, 1)
+      wishlist.save();
+      return response.status(200).json({ message: "product removed in wishlist" })
+      }
+      else{
+        return response.status(400).json({error:"not found",status:false});
+      }
+    }
+    else {
+      return response.status(400).json({ error: "Bad request", status: false });
+    }
+  }
+  catch (err) {
     console.log(err);
     return response.status(500).json({ message: "Internal server error", status: false });
   }

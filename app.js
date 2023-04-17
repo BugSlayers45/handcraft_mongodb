@@ -8,7 +8,7 @@ import AdminRouter from "./routes/admin.js";
 import CategoryRouter from "./routes/category.route.js";
 import CustomerRouter from "./routes/customer.route.js";
 import CartRouter from "./routes/cart.route.js";
-
+import orderRouter from "./routes/order.route.js"
 
 
 const app = express();
@@ -25,6 +25,8 @@ app.use("/seller", SellerRouter);
 app.use("/product", ProductRouter);
 app.use("/admin", AdminRouter);
 app.use("/category", CategoryRouter);
+app.use("/order",orderRouter)
+
 
 
 app.listen(3000, () => {

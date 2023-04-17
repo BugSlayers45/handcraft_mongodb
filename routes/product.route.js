@@ -1,6 +1,6 @@
 import express from "express";
 
-import { Save, getProductByCategory, getProductById, productListBySellerId, removeProduct, updateproducts, viewProduct } from "../controller/product.controller.js";
+import { Save, getProductByCategory, getProductById, productListBySellerId, removeProduct, search, updateproducts, viewProduct } from "../controller/product.controller.js";
 import verifyTokenForSeller from "../middlewares/tokenVerification.js";
 
 
@@ -14,6 +14,6 @@ router.post("/delete/:sellerId", verifyTokenForSeller, removeProduct);
 router.get("/viewproduct",viewProduct);
 router.get("/:id", getProductById);
 router.get("/products/:categoryId",getProductByCategory)
-
+router.post("/search/:keyword",search)
 
 export default router;

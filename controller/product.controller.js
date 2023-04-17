@@ -1,5 +1,6 @@
 import { Product } from "../model/product.model.js";
 import dbConfig from "../db/dbConfig.js";
+import { Category } from "../model/category.model.js";
 
 export const Save = async (request, response, next) => {
     try {
@@ -77,16 +78,9 @@ export const getProductById = (request, response, next) => {
 }
 
 
-// export const saveallproduct = (request, response, next) => {
-//     Product.create(request.body.products)
-//         .then(result => {
-//             return response.status(200).json({ message: "Product saved...", status: true })
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             return response.status(500).json({ error: "Internal server error", status: false });
-//         })
-// }
+export const addPage = (request, response, next) => {
+    response.render("image.ejs");
+}
 
 
 
@@ -98,4 +92,32 @@ export const getProductByCategory = (request, response, next) => {
             console.log(err);
             return response.status(500).json({ error: "Internal Server", status: false });
         })
+}
+
+
+export const productAdd = (request, response, next) => {
+    try {
+        const images = request.files.map(file => {
+            return {
+                images: file.filename
+            }
+        });
+        console.log(images);
+        let { title, description, price, discountPercantage, rating, stock, keyword } = request.body
+        Product.create(({ images: images, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword }))
+           return response.status(200).json({ message: "saved...", status: true });
+
+    }
+    catch (err) {
+        console.log(err);
+       return response.statsu(500).json({ error: "Internal server error", status: false });
+    }
+
+    // Product.insertMany(images, (err) => {
+    //     if (err) {
+    //       return response.status(500).json({error:"Internal server error"});
+    //     }
+    
+    //     response.status(200).json({message:"saved...."});
+    //   });
 }

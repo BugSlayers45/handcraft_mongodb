@@ -51,6 +51,7 @@ export const order = async (request, response, next) => {
     }
 }
 
+
 export const placeOrder = async (request, response, next) => {
     try {
         const orderIds = Promise.all(
@@ -90,6 +91,7 @@ export const placeOrder = async (request, response, next) => {
             return response.status(200).json({ orderdetail: order, status: true })
         }
     } catch (err) {
+
         console.log(err)
         return response.status(500).json({ error: err })
     }
@@ -98,6 +100,7 @@ export const placeOrder = async (request, response, next) => {
 
 export const orderDetailsByCustomerIdorOrderId = async (request, response, next) => {
     try {
+
         const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
         console.log(customer)
         if (!customer)
@@ -109,7 +112,21 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
             })
             if (order.length == 0)
                 return response.status(401).json({ message: "NO order Found" });
-            return response.status(200).json({ order, status: true })
+
+            const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
+            console.log(customer)
+            if (!customer)
+                return response.status(401).json({ message: "invalid user" })
+            else {
+                const order = await Order.find({ $or: [{ customerid: request.body.id }, { _id: request.body.id }] }).populate({
+                    path: "orderItem",
+                    populate: { path: "product" }
+                })
+                if (order.length == 0)
+                    return response.status(401).json({ message: "NO order Found" });
+
+                return response.status(200).json({ order, status: true })
+            }
         }
     }
 
@@ -117,9 +134,8 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
         console.log(err)
         return response.status(500).json({ error: "INTERNAL SERVER ERROR" })
     }
-
-
 }
+
 
 
 export const updateOrder = async (request, response, next) => {

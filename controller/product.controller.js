@@ -82,8 +82,6 @@ export const addPage = (request, response, next) => {
     response.render("image.ejs");
 }
 
-
-
 export const getProductByCategory = (request, response, next) => {
     Product.find({ categoryId: request.params.categoryId })
         .then(result => {
@@ -97,44 +95,36 @@ export const getProductByCategory = (request, response, next) => {
 
 export const productAdd = (request, response, next) => {
     try {
+        console.log(request.files);
         const images = request.files.map(file => {
-            return {
-                images: file.filename
-            }
+            return file.filename
         });
         console.log(images);
         let { title, description, price, discountPercantage, rating, stock, keyword } = request.body
         Product.create(({ images: images, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword }))
-           return response.status(200).json({ message: "saved...", status: true });
-
+        return response.status(200).json({ message: "saved...", status: true });
     }
     catch (err) {
         console.log(err);
-       return response.statsu(500).json({ error: "Internal server error", status: false });
+        return response.statsu(500).json({ error: "Internal server error", status: false });
     }
-
-    // Product.insertMany(images, (err) => {
-    //     if (err) {
-    //       return response.status(500).json({error:"Internal server error"});
-    //     }
-    
-    //     response.status(200).json({message:"saved...."});
-    //   });
 }
 
-export const search= async(request,response,next)=>{
-    try{
-     let searchResult=await Product.find({$or:[{title:{$regex:request.params.keyword,$options:"i"}},
-                                                {keyword:{$regex:request.params.keyword,$options:"i"}},
-                                                {description:{$regex:request.params.keyword,$options:"i"}}]})
-       if(searchResult.length>0)
-       return response.status(200).json({Product:searchResult,status:true})
-       else
-       return response.status(401).json({result:"NO result found",status:false}) 
-    }
-    catch(err){
-     console.log(err)
-     return response.status(500).json({error:err,status:false})
-    }
- }
 
+export const search = async (request, response, next) => {
+    try {
+        let searchResult = await Product.find({
+            $or: [{ title: { $regex: request.params.keyword, $options: "i" } },
+            { keyword: { $regex: request.params.keyword, $options: "i" } },
+            { description: { $regex: request.params.keyword, $options: "i" } }]
+        })
+        if (searchResult.length > 0)
+            return response.status(200).json({ Product: searchResult, status: true })
+        else
+            return response.status(401).json({ result: "NO result found", status: false })
+    }
+    catch (err) {
+        console.log(err)
+        return response.status(500).json({ error: err, status: false })
+    }
+}

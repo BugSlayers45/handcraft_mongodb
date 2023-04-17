@@ -8,11 +8,13 @@ import AdminRouter from "./routes/admin.js";
 import CategoryRouter from "./routes/category.route.js";
 import CustomerRouter from "./routes/customer.route.js";
 import CartRouter from "./routes/cart.route.js";
+
 import OrderRouter from "./routes/order.route.js";
 import WishlistRouter from './routes/wishlist.route.js';
 
 import path from "path";
 import { fileURLToPath } from 'url';
+
 
 
 const app = express();
@@ -29,7 +31,6 @@ app.use("/seller", SellerRouter);
 app.use("/product", ProductRouter);
 app.use("/admin", AdminRouter);
 app.use("/category", CategoryRouter);
-
 app.use("/order",OrderRouter);
 app.use('/wishlist',WishlistRouter);
 

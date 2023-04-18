@@ -1,4 +1,4 @@
-import express from "express";
+import express, { request, response } from "express";
 import mongoose from "mongoose";
 import { Order } from "../model/order.model.js";
 import { OrderItems } from "../model/orderItem.model.js";
@@ -103,13 +103,13 @@ export const orderDetailsBySeller = async (request, response, next) => {
             path: "orderItem",
             populate: { path: "product", match : {"sellerId" : request.body.id}}
         })
-        //let orders = order[1];
+       
         if (order.length==0)
             return response.status(401).json({ message: "NO order Found" });
-            return response.status(200).json({ order, status: true })
-        
-    }
-
+        return response.status(200).json({ order, status: true })
+           
+          }
+   
     catch (err) {
         console.log(err)
         return response.status(500).json({ error: "INTERNAL SERVER ERROR" })
@@ -138,3 +138,15 @@ export const viewAllOrder = async (request, response, next) => {
 
 
 }
+
+export const totalOrderItem = async(request, response, next) => {
+    try{
+    const order = await Order.findById(request.body.id)
+    const leng = order.orderItem.length;
+    return response.status(200).json({ order, status: true , totalOrder : leng+1})
+    }
+    catch(err){
+        console.log(err);
+        return response.status(500).json({ error: "INTERNAL SERVER ERROR" })
+    }
+ }

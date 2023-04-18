@@ -1,5 +1,5 @@
 import express from "express";
-import { orderDetailsByCustomerIdorOrderId, orderDetailsBySeller, placeOrder, updateOrder, viewAllOrder } from "../controller/order.controller.js";
+import { orderDetailsByCustomerIdorOrderId, orderDetailsBySeller, placeOrder, totalOrderItem, updateOrder, viewAllOrder } from "../controller/order.controller.js";
 import { verificationToken } from "../middlewaress/tokenVerification.js";
 import { verifyToken } from "../middleware/tokenVerification.js";
 
@@ -9,6 +9,7 @@ router.post("/buynow",verificationToken,placeOrder)
 router.get("/orderdetail",orderDetailsByCustomerIdorOrderId)
 router.get("/view-all-order",viewAllOrder)
 router.post("/orderdetailBySeller",orderDetailsBySeller);
+router.post("/totalproduct", totalOrderItem);
 
 router.get("/updateorderstatus/:orderId",updateOrder)
 

@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import dbConfig from "./db/dbConfig.js";
+// import dbConfig from "./db/dbConfig.js";
 
 import SellerRouter from "./routes/seller.route.js";
 import ProductRouter from "./routes/product.route.js";
@@ -14,6 +14,11 @@ import WishlistRouter from './routes/wishlist.route.js';
 
 import path from "path";
 import { fileURLToPath } from 'url';
+
+import paymentRoute from "./routes/payment.route.js";
+import cors from "cors";
+// config({ path: "./db/config.env" });
+
 
 
 
@@ -37,6 +42,14 @@ app.use('/wishlist',WishlistRouter);
 const publicPath = path.join(path.dirname(fileURLToPath(import.meta.url)),"public");
 app.use(express.static(publicPath));
 
+
+
+app.use(cors());
+
+app.use("/api", paymentRoute);
+app.get("/api/getkey", (req, res) =>
+  res.status(200).json({ key: "rzp_test_mkdEsKQeQYTu1W" })
+);
 
 app.listen(3000, () => {
     console.log("Server started....");

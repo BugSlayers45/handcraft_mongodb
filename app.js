@@ -1,3 +1,4 @@
+import cors from "cors"
 import express from "express";
 import bodyParser from "body-parser";
 // import dbConfig from "./db/dbConfig.js";
@@ -23,6 +24,7 @@ import cors from "cors";
 
 
 const app = express();
+app.use(cors())
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

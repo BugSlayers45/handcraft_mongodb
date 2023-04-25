@@ -34,7 +34,7 @@ export const updateproducts = async (request, response, next) => {
             return response.status(401).json({ error: "Bad request...", status: true });
         }
         else {
-            let result = await Product.updateOne({ _id: request.body.id }, { price: request.body.price })
+            let result = await Product.updateMany({ _id: request.body._id }, { title: request.body.title, description: request.body.description, price: request.body.price, stock: request.body.stock, discountPercentage: request.body.discountPercentage });
             return response.status(200).json({ result: result, status: true })
         }
     } catch (err) {
@@ -43,12 +43,13 @@ export const updateproducts = async (request, response, next) => {
     }
 }
 
+
 export const removeProduct = async (request, response, next) => {
     try {
-        let product = await Product.find({ sellerId: request.params.sellerId })
-        if (!product)
-            return response.status(404).json({ error: "Requested resources not found", status: false });
-        let status = await Product.deleteOne({ _id: request.body._id });
+        // let product = await Product.find({ sellerId: request.params.sellerId })
+        // if (!product)
+        //     return response.status(404).json({ error: "Requested resources not found", status: false });
+        let status = await Product.deleteOne({ _id: request.params._id });
         return response.status(200).json({ message: "Product removed", status: true })
 
     } catch (err) {

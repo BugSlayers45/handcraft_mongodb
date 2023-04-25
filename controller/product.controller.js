@@ -58,6 +58,7 @@ export const removeProduct = async (request, response, next) => {
 }
 
 export const viewProduct = async (request, response, next) => {
+    console.log("called...")
     try {
         let product = await Product.find()
         return response.status(200).json({ products: product, status: true });

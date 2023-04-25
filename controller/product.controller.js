@@ -65,7 +65,15 @@ export const viewProduct = async (request, response, next) => {
         return response.status(500).json({ error: "Internal Server", status: false });
     }
 }
-
+export const featuresProduct = async (request, response, next) => {
+    try {
+        let product = await Product.find().limit(8)
+        // console.log(product)
+        return response.status(200).json({ products: product, status: true });
+    } catch (err) {
+        return response.status(500).json({ error: "Internal Server", status: false });
+    }
+}
 
 export const getProductById = (request, response, next) => {
     Product.findById(request.params.id)
@@ -83,7 +91,7 @@ export const addPage = (request, response, next) => {
 }
 
 export const getProductByCategory = (request, response, next) => {
-    Product.find({ categoryId: request.params.categoryId })
+    Product.find({categoryId: request.params.categoryId})
         .then(result => {
             return response.status(200).json({ products: result, status: true });
         }).catch(err => {

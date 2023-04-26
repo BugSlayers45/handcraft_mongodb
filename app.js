@@ -11,17 +11,17 @@ import CartRouter from "./routes/cart.route.js";
 
 import OrderRouter from "./routes/order.route.js";
 import WishlistRouter from './routes/wishlist.route.js';
-
+import ReviewRouter from './routes/review.route.js';
 import path from "path";
 import { fileURLToPath } from 'url';
-
+import cors from "cors";
 
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(cors());
 app.set("view-engine","ejs");
 app.use("/customer", CustomerRouter);
 app.use("/product", ProductRouter);
@@ -33,7 +33,7 @@ app.use("/admin", AdminRouter);
 app.use("/category", CategoryRouter);
 app.use("/order",OrderRouter);
 app.use('/wishlist',WishlistRouter);
-
+app.use("/review",ReviewRouter)
 const publicPath = path.join(path.dirname(fileURLToPath(import.meta.url)),"public");
 app.use(express.static(publicPath));
 

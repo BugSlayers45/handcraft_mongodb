@@ -65,7 +65,7 @@ export const placeOrder = async (request, response, next) => {
         )
         const orderIdArray = await orderIds;
 
-        const customerinfo = await Customer.findOne(request.body._id)
+        const customerinfo = await Customer.findOne(request.body.customerid)
         console.log(customerinfo.id)
         if (!customerinfo)
             return response.status(401).json({ message: "No user found", status: false })
@@ -99,7 +99,7 @@ export const placeOrder = async (request, response, next) => {
 
 export const orderDetailsByCustomerIdorOrderId = async (request, response, next) => {
     try {
-
+        console.log(request.body);
         const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
         console.log(customer)
         if (!customer)
@@ -119,7 +119,7 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
             else {
                 const order = await Order.find({ $or: [{ customerid: request.body.id }, { _id: request.body.id }] }).populate({
                     path: "orderItem",
-                    populate: { path: "product" }
+                    populate: { path: "product"  }
                 })
                 if (order.length == 0)
                     return response.status(401).json({ message: "NO order Found" });
@@ -150,6 +150,22 @@ export const updateOrder = async (request, response, next) => {
                 status: request.body.status
             }, { new: true }
         )
+        return response.status(200).json({ Order: order })
+    }
+    catch (err) {
+        console.log(err)
+        return response.status(500).json({ error: "Internal Server Error" })
+
+    }
+}
+
+
+export const viewAllOrder = async (request, response, next) => {
+    try {
+        let order = await Order.find()
+        if (!order)
+            return response.status(401).json({ message: "Order  not found" })
+        
         return response.status(200).json({ Order: order })
     }
     catch (err) {

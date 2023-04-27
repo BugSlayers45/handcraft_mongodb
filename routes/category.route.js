@@ -4,7 +4,7 @@ import { addCategory, categoryList, remove, saveAllCategory, update } from "../c
 const router = express.Router();
 router.post("/add", addCategory);
 router.post("/saveallcategory", saveAllCategory);
-router.post("/delete",remove);
+router.delete("/delete/:id",remove);
 router.put("/:id",update);
 router.get("/category-list",categoryList);
 

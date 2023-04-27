@@ -1,6 +1,7 @@
 import { Product } from "../model/product.model.js";
 import dbConfig from "../db/dbConfig.js";
 import { Category } from "../model/category.model.js";
+import { Seller } from "../model/seller.model.js";
 
 export const Save = async (request, response, next) => {
     try {
@@ -58,7 +59,6 @@ export const removeProduct = async (request, response, next) => {
 }
 
 export const viewProduct = async (request, response, next) => {
-    console.log("called...")
     try {
         let product = await Product.find()
         return response.status(200).json({ products: product, status: true });
@@ -66,7 +66,15 @@ export const viewProduct = async (request, response, next) => {
         return response.status(500).json({ error: "Internal Server", status: false });
     }
 }
-
+export const featuresProduct = async (request, response, next) => {
+    try {
+        let product = await Product.find().limit(8)
+        // console.log(product)
+        return response.status(200).json({ products: product, status: true });
+    } catch (err) {
+        return response.status(500).json({ error: "Internal Server", status: false });
+    }
+}
 
 export const getProductById = (request, response, next) => {
     Product.findById(request.params.id)
@@ -77,7 +85,6 @@ export const getProductById = (request, response, next) => {
             return response.status(500).json({ error: "Internal Server", status: false });
         })
 }
-
 
 export const addPage = (request, response, next) => {
     response.render("image.ejs");
@@ -97,19 +104,42 @@ export const getProductByCategory = (request, response, next) => {
 export const productAdd = (request, response, next) => {
     try {
         console.log(request.files);
-        const images = request.files.map(file => {
-            return file.filename
-        });
-        console.log(images);
+
+        // const images = request.files.map(file => {
+        //     return file.filename
+        // });
+        let thumbnail = request.file?.filename;
+        // console.log(images);
+        console.log(thumbnail);
         let { title, description, price, discountPercantage, rating, stock, keyword } = request.body
-        Product.create(({ images: images, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword }))
+        Product.create(({ thumbnail: thumbnail, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword }))
         return response.status(200).json({ message: "saved...", status: true });
     }
     catch (err) {
         console.log(err);
-        return response.statsu(500).json({ error: "Internal server error", status: false });
+        return response.status(500).json({ error: "Internal server error", status: false });
     }
 }
+export const imagesAdd = async (request, response, next) => {
+    try {
+        let status = await Seller.find(request.body.sellerId)
+        if (!status)
+            return response.status(401).json({ error: "Bad request", status: false });
+        console.log(request.files);
+
+        const images = await request.files.map(file => {
+            return file.filename
+        });
+        console.log(images);
+        await Product.create(({ images: images }))
+        return response.status(200).json({ message: "saved...", status: true });
+    }
+    catch (err) {
+        console.log(err);
+        return response.status(500).json({ error: "Internal server error", status: false });
+    }
+}
+
 
 
 export const search = async (request, response, next) => {

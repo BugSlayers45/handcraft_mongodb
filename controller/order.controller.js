@@ -100,6 +100,25 @@ export const placeOrder = async (request, response, next) => {
                 date: request.body.date,
             })
             await order.save()
+            // 
+            let _id =customerinfo.id
+            let email = await Customer.findOne(_id);
+            var mailData = {
+                from: 'mukuldixit931@gmail.com',
+                to: 'vikrampratapsingh628@gmail.com',
+                subject: 'Order Confirmation',
+                // text: deliveryAddress+"",
+                html: '<b>Hey Dear! </b><br> Your order confirm and ready to deliverd<br/><br/>' + contactPerson + "<br/>" + deliveryAddress + "<br/>" + contactNumber + "<br/>" + billAmount,
+            };
+            transporter.sendMail(mailData, (error, info) => {
+                if (error) {
+                    return console.log(error);
+                }
+                return response.status(200).send({ message: "Mail send", message_id: info.messageId });
+            });
+            return response.status(200).json({ message: "Order successfull placed..", status: true });
+
+            // 
             return response.status(200).json({ orderdetail: order, status: true })
         }
     } catch (err) {

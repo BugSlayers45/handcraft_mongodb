@@ -76,7 +76,7 @@ export const featuresProduct = async (request, response, next) => {
 }
 
 export const getProductById = (request, response, next) => {
-    Product.findById(request.params.id)
+    Product.findById(request.params.id).populate("categoryId")
         .then(result => {
             return response.status(200).json({ product: result, status: true });
         }).catch(err => {

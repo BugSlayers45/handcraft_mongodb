@@ -28,15 +28,15 @@ export const productListBySellerId = async (request, response, next) => {
 export const updateproducts = async (request, response, next) => {
     try {
 
-        let search = await Product.find({ sellerId: request.body.sellerId });
+        // let search = await Product.find({ sellerId: request.body.sellerId });
 
-        if (!search) {
-            return response.status(401).json({ error: "Bad request...", status: true });
-        }
-        else {
-            let result = await Product.updateMany({ _id: request.body._id }, { title: request.body.title, description: request.body.description, price: request.body.price, stock: request.body.stock, discountPercentage: request.body.discountPercentage });
-            return response.status(200).json({ result: result, status: true })
-        }
+        // if (!search) {
+        //     return response.status(401).json({ error: "Bad request...", status: true });
+        // }
+        // else {
+        let result = await Product.updateMany({ _id: request.params._id }, { title: request.body.title, description: request.body.description, price: request.body.price, stock: request.body.stock, discountPercentage: request.body.discountPercentage });
+        return response.status(200).json({ result: result, status: true })
+        // }
     } catch (err) {
         console.log(err);
         return response.status(500).json({ error: "INTERNAL SERVER ERROR", status: false })
@@ -66,7 +66,15 @@ export const viewProduct = async (request, response, next) => {
         return response.status(500).json({ error: "Internal Server", status: false });
     }
 }
-
+export const featuresProduct = async (request, response, next) => {
+    try {
+        let product = await Product.find().limit(8)
+        // console.log(product)
+        return response.status(200).json({ products: product, status: true });
+    } catch (err) {
+        return response.status(500).json({ error: "Internal Server", status: false });
+    }
+}
 
 export const getProductById = (request, response, next) => {
     Product.findById(request.params.id)
@@ -96,14 +104,18 @@ export const getProductByCategory = (request, response, next) => {
 
 export const productAdd = (request, response, next) => {
     try {
+        console.log("called....")
         console.log(request.files);
         const images = request.files.map(file => {
             return file.filename
         });
         console.log(images);
-        let { title, description, price, discountPercantage, rating, stock, keyword } = request.body
-        Product.create(({ images: images, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword }))
+
+        console.log(category + "nghg");
+        let { title, description, price, discountPercantage, rating, stock, categoryId, keyword } = request.body
+        Product.create(({ images: images, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, categoryId: categoryId, keyword: keyword }))
         return response.status(200).json({ message: "saved...", status: true });
+
     }
     catch (err) {
         console.log(err);

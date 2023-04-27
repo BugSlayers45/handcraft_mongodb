@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
         pass: 'glqwzpijniaakoum',
     },
     secure: true,
-});
+});    
 
 export const order = async (request, response, next) => {
     try {

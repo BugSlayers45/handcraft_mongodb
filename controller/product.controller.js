@@ -1,6 +1,7 @@
 import { Product } from "../model/product.model.js";
 import dbConfig from "../db/dbConfig.js";
 import { Category } from "../model/category.model.js";
+import { Seller } from "../model/seller.model.js";
 
 export const Save = async (request, response, next) => {
     try {
@@ -16,6 +17,7 @@ export const Save = async (request, response, next) => {
 export const productListBySellerId = async (request, response, next) => {
     try {
         let result = await Product.find({ sellerId: request.params.sellerId })
+
         return response.status(200).json({ productsList: result, status: true })
     } catch (err) {
         console.log(err);
@@ -95,7 +97,6 @@ export const getProductById = (request, response, next) => {
         })
 }
 
-
 export const addPage = (request, response, next) => {
     response.render("image.ejs");
 }
@@ -113,20 +114,23 @@ export const getProductByCategory = (request, response, next) => {
 
 export const productAdd = (request, response, next) => {
     try {
-        console.log("called....")
-        console.log(request.files);
-        const images = request.files.map(file => {
-            return file.filename
+        let thumbnail = null;
+        let images = [];
+        request.files.map(file => {
+            if (file.fieldname != "thum")
+                images.push(file.filename)
+            else
+                thumbnail = file.filename
         });
-        console.log(images);
-        let { title, description, price, discountPercantage, rating, stock, categoryId, keyword } = request.body
-        Product.create(({ images: images, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, categoryId: categoryId, keyword: keyword }))
+        let { title, description, price, discountPercantage, rating, stock, categoryId, sellerId, keyword } = request.body
+        Product.create(({ images: images, thumbnail: thumbnail, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, categoryId: categoryId, sellerId: sellerId, keyword: keyword }))
+
         return response.status(200).json({ message: "saved...", status: true });
 
     }
     catch (err) {
         console.log(err);
-        return response.statsu(500).json({ error: "Internal server error", status: false });
+        return response.status(500).json({ error: "Internal server error", status: false });
     }
 }
 

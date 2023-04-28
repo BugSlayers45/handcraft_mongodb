@@ -1,7 +1,7 @@
 import cors from "cors"
 import express from "express";
-import bodyParser from "body-parser";
-// import dbConfig from "./db/dbConfig.js";
+import dbConfig from "./db/dbConfig.js";
+
 import SellerRouter from "./routes/seller.route.js";
 import ProductRouter from "./routes/product.route.js";
 import AdminRouter from "./routes/admin.js";
@@ -14,12 +14,15 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 import paymentRoute from "./routes/payment.route.js";
+import bodyParser from "body-parser";
+
 
 const app = express();
 app.use(cors())
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.set("view-engine", "ejs");
 app.use("/customer", CustomerRouter);
@@ -35,6 +38,7 @@ app.use('/wishlist', WishlistRouter);
 
 const publicPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "public");
 app.use(express.static(publicPath));
+
 app.use("/api", paymentRoute);
 app.get("/api/getkey", (req, res) =>
   res.status(200).json({ key: "rzp_test_mkdEsKQeQYTu1W" })

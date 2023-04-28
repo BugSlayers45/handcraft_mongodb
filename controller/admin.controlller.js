@@ -4,6 +4,7 @@ import { Admin } from "../model/admin.model.js";
 import Jwt from "jsonwebtoken";
 import { Seller } from "../model/seller.model.js";
 import { Customer } from "../model/customer.model.js";
+import { Order } from "../model/order.model.js";
 
 export const signUp = async (request, response, next) => {
     const errors = await validationResult(request);
@@ -60,7 +61,7 @@ export const sellerAproval = async (request, response, next) => {
 export const customerCount = (request, response, next) => {
     const count = Customer.find()
         .then(function (models) {
-            return response.status(200).json({ customer: models.length, status: true });
+            return response.status(200).json({ customer: models, status: true });
         })
         .catch(function (err) {
             console.log(err);
@@ -71,7 +72,29 @@ export const customerCount = (request, response, next) => {
 export const sellercount = (request, response, next) => {
     const count = Seller.find()
         .then(function (models) {
-            return response.status(200).json({seller: models.length, status: true });
+            return response.status(200).json({ seller: models, status: true });
+        })
+        .catch(function (err) {
+            console.log(err);
+            return response.status(500).json({ error: "Internal server error", status: false });
+        });
+}
+export const sellerDeactive = (request, response, next) => {
+    try {
+        const count = Seller.find()
+        if (count.status == "Deactive")
+            return response.status(200).json({ seller: count, status: true });
+    }
+    catch (err) {
+        console.log(err);
+        return response.status(500).json({ error: "Internal server error", status: false });
+    }
+}
+
+export const ordercount = (request, response, next) => {
+    const count = Order.find()
+        .then(function (models) {
+            return response.status(200).json({ orders: models, status: true });
         })
         .catch(function (err) {
             console.log(err);

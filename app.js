@@ -17,7 +17,6 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 import paymentRoute from "./routes/payment.route.js";
-import cors from "cors";
 // config({ path: "./db/config.env" });
 
 

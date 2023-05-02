@@ -18,7 +18,11 @@ const customerSchema = new mongoose.Schema({
     customerContact: {
         type: String,
         required: true
+    },
+    customerImage: {
+        type: String,
     }
+
 });
 
 export const Customer = mongoose.model("customer", customerSchema);

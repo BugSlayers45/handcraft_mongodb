@@ -5,8 +5,7 @@ import { Seller } from "../model/seller.model.js";
 
 export const Save = async (request, response, next) => {
     try {
-        await Product.create(request.body.products)
-
+        await Product.create(request.body.products); 
         return response.status(200).json({ message: "Product saved...", status: true });
     } catch (err) {
         console.log(err);
@@ -114,6 +113,7 @@ export const getProductByCategory = (request, response, next) => {
 
 export const productAdd = (request, response, next) => {
     try {
+        console.log("called");
         let thumbnail = null;
         let images = [];
         request.files.map(file => {

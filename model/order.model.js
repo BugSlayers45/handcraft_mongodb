@@ -6,7 +6,7 @@ const OrderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "customer"
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now,
     },
@@ -23,11 +23,11 @@ const OrderSchema = new mongoose.Schema({
         default: "pending"
     },
     paymentMode: String,
-    orderItem:
+    orderItems:
         [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "OrderItems",
+                ref: "orderItems",
                 required: true,
             }
         ]

@@ -4,6 +4,7 @@ import nodemailer from "nodemailer";
 import { OrderItems } from "../model/orderItem.model.js";
 import { Product } from "../model/product.model.js";
 import { Seller } from "../model/seller.model.js";
+import mongoose from "mongoose";
 
 
 const transporter = nodemailer.createTransport({
@@ -14,7 +15,7 @@ const transporter = nodemailer.createTransport({
         pass: 'glqwzpijniaakoum',
     },
     secure: true,
-});    
+});
 
 export const order = async (request, response, next) => {
     try {
@@ -34,12 +35,12 @@ export const order = async (request, response, next) => {
         console.log(product);
         _id = product.sellerId
         // console.log(_id + "Seller");
-        let seller = await Seller.findOne(_id);
+        let seller = await Seller.findOne(_id)
         // console.log(seller);
-        console.log(seller.sellerEmail +" seller email");
+        console.log(seller.sellerEmail + " seller email");
         // --------------------------------------------------------------------
         // console.log(order)
-          _id = order.customerid
+        _id = order.customerid
         let email = await Customer.findOne(_id);
         const { deliveryAddress, contactNumber, contactPerson, billAmount } = request.body
         var mailData = {
@@ -78,7 +79,7 @@ export const placeOrder = async (request, response, next) => {
         )
         const orderIdArray = await orderIds;
 
-        const customerinfo = await Customer.findOne(request.body._id)
+        const customerinfo = await Customer.findOne({ _id: request.body.customerid })
         console.log(customerinfo.id)
         if (!customerinfo)
             return response.status(401).json({ message: "No user found", status: false })
@@ -100,25 +101,7 @@ export const placeOrder = async (request, response, next) => {
                 date: request.body.date,
             })
             await order.save()
-            // 
-            let _id =customerinfo.id
-            let email = await Customer.findOne(_id);
-            var mailData = {
-                from: 'mukuldixit931@gmail.com',
-                to: 'vikrampratapsingh628@gmail.com',
-                subject: 'Order Confirmation',
-                // text: deliveryAddress+"",
-                html: '<b>Hey Dear! </b><br> Your order confirm and ready to deliverd<br/><br/>' + contactPerson + "<br/>" + deliveryAddress + "<br/>" + contactNumber + "<br/>" + billAmount,
-            };
-            transporter.sendMail(mailData, (error, info) => {
-                if (error) {
-                    return console.log(error);
-                }
-                return response.status(200).send({ message: "Mail send", message_id: info.messageId });
-            });
-            return response.status(200).json({ message: "Order successfull placed..", status: true });
 
-            // 
             return response.status(200).json({ orderdetail: order, status: true })
         }
     } catch (err) {
@@ -188,4 +171,67 @@ export const updateOrder = async (request, response, next) => {
         return response.status(500).json({ error: "Internal Server Error" })
 
     }
+}
+
+export const allOrder = async (request, response, next) => {
+    try {
+        let allOrders = await Order.find()
+        return response.status(200).json({ orders: allOrders, status: true });
+    } catch (err) {
+        return response.status(500).json({ error: "Internal Server", status: false });
+    }
+}
+
+export const orderDetailsBySeller = async (request, response, next) => {
+    Order.aggregate([
+        {
+            $unwind: "$orderItem"
+        },
+        {
+            $lookup: {
+                localField: 'orderItem',
+                foreignField: '_id',
+                from: 'orderitems',
+                as: 'OrderItems'
+            }
+        },
+        {
+            $unwind: "$OrderItems"
+        },
+        {
+            $lookup: {
+                localField: 'OrderItems.product',
+                foreignField: '_id',
+                from: 'products',
+                as: "productDetails"
+            }
+        },
+        {
+            $unwind: "$productDetails"
+        },
+        {
+            $addFields: {
+                sellerId: "$productDetails.sellerId"
+            }
+        },
+        {
+            $match: { sellerId: new mongoose.Types.ObjectId('' + request.params.id) }
+        }
+    ]).then(result => {
+        return response.status(200).json({ sellerOrder: result, status: true });
+    }).catch(err => {
+        console.log(err);
+        return response.status(500).json({ error: "Internal Server Error", status: false });
+    });
+}
+
+export const getAllLikes = (request, response, next) => {
+    console.log(request.body.postId);
+    Post.findById({ _id: request.body.postId })
+        .populate("likeItems.friendUserId").then(result => {
+            return response.status(200).json(result);
+        }).catch(err => {
+            console.log(err);
+            return response.status(500).json({ message: "internal server error", status: false })
+        })
 }

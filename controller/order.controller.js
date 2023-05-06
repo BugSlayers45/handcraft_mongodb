@@ -2,6 +2,8 @@ import { Customer } from "../model/customer.model.js";
 import { Order } from "../model/order.model.js";
 import nodemailer from "nodemailer";
 import { OrderItems } from "../model/orderItem.model.js";
+import { Product } from "../model/product.model.js";
+import { Seller } from "../model/seller.model.js";
 
 
 const transporter = nodemailer.createTransport({
@@ -25,8 +27,19 @@ export const order = async (request, response, next) => {
             orderItem: [{productId: request.body.product, quantity: request.body.quantity }]
 
         })
+        // --------------------------------------------------------------------
+        let _id = order.orderItem.productId
+        // console.log(_id + "Id");
+        let product = await Product.findOne(_id);
+        console.log(product);
+        _id = product.sellerId
+        // console.log(_id + "Seller");
+        let seller = await Seller.findOne(_id);
+        // console.log(seller);
+        console.log(seller.sellerEmail +" seller email");
+        // --------------------------------------------------------------------
         // console.log(order)
-        let _id = order.customerId
+          _id = order.customerid
         let email = await Customer.findOne(_id);
         const { deliveryAddress, contactNumber, contactPerson, billAmount } = request.body
         var mailData = {
@@ -148,7 +161,6 @@ export const getOrderDetails = async (request, response, next) => {
     }
   }
   
-
 
 
 export const updateOrder = async (request, response, next) => {

@@ -1,7 +1,6 @@
 import cors from "cors"
 import express from "express";
 import bodyParser from "body-parser";
-// import dbConfig from "./db/dbConfig.js";
 import SellerRouter from "./routes/seller.route.js";
 import ProductRouter from "./routes/product.route.js";
 import AdminRouter from "./routes/admin.js";
@@ -18,6 +17,7 @@ app.use(cors())
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.set("view-engine", "ejs");
 app.use("/customer", CustomerRouter);

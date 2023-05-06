@@ -12,6 +12,7 @@ import WishlistRouter from './routes/wishlist.route.js';
 import path from "path";
 import { fileURLToPath } from 'url';
 import paymentRoute from "./routes/payment.route.js";
+
 const app = express();
 app.use(cors())
 

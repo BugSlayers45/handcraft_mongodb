@@ -4,8 +4,10 @@ import { verificationToken } from "../middlewaress/tokenVerification.js";
 
 const router = express.Router();
 
-router.post("/add-to-cart",addtocart);
-router.post("/viewCartItems",viewCartItems);
-router.post("/deleteproduct",removeCart)
+
+router.post("/add-to-cart", addtocart);
+router.post("/viewCartItems", viewCartItems);
+router.post("/deleteproduct",verificationToken,removeCart)
+
 
 export default router;

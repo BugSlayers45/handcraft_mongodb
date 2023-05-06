@@ -44,6 +44,21 @@ export const SingUp = async (request, response, next) => {
     }
 }
 
+export const UploadImg = async (request, response, next) => {
+    try {
+        let image = request.file?.filename;  
+        console.log (image);
+        let data = await Customer.findOneAndUpdate({_id:request.body.customerId},{customerImage : image});
+        return response.status(200).json({Message : "Image upadated successfully",status:true})
+
+    }
+    catch (err) {
+        console.log(err);
+        return response.status(500).json({ error: "Internal server error", status: false });
+    
+    }
+}
+
 
 
 

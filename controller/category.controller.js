@@ -41,7 +41,7 @@ export const categoryList = async (request, response, next) => {
 }
 
 export const remove = (request, response, next) => {
-    Category.deleteOne({ _id: request.body.id })
+    Category.findByIdAndRemove(request.params.id)
         .then(result => {
             return response.status(200).json({ message: "Category removed", status: true });
         }).catch(err => {

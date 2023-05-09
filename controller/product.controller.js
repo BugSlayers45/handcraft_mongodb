@@ -74,6 +74,19 @@ export const viewProduct = async (request, response, next) => {
         return response.status(500).json({ error: "Internal Server", status: false });
     }
 }
+
+export const InfProduct = async (request, response, next) => {
+    let page = parseInt(request.query.page) || 1;
+    let perPage = 10;
+    Product.find().skip((page-1)*10).limit(9).
+    then(result=>{
+        return response.status(200).json({products: result, status: true});
+    }).catch(err=>{
+        return response.status(500).json({error:"Internal Server Error", status: false});
+    })
+}
+
+
 export const featuresProduct = async (request, response, next) => {
     try {
         let product = await Product.find().limit(8)

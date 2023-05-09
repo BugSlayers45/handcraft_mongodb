@@ -8,8 +8,7 @@ const router = express.Router();
 
 router.post("/buynow",placeOrder)
 router.get("/orderdetail",getOrderDetails)
-router.post("/buynow",verificationToken,placeOrder)
-router.get("/updateorderstatus/:orderId",verificationToken,updateOrder)
+router.get("/updateorderstatus/:orderId",updateOrder)
 
 
 

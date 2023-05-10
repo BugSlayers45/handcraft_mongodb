@@ -1,6 +1,6 @@
-import { Seller } from "../model/seller.model.js";
 import bcrypt from "bcryptjs";
 import Jwt from "jsonwebtoken";
+import { Seller } from "../model/seller.model.js";
 
 export const SingUp = async (request, response, next) => {
     try {

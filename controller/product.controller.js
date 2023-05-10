@@ -1,7 +1,5 @@
 import { Product } from "../model/product.model.js";
-import dbConfig from "../db/dbConfig.js";
-import { Category } from "../model/category.model.js";
-import { Seller } from "../model/seller.model.js";
+
 
 export const Save = async (request, response, next) => {
     try {

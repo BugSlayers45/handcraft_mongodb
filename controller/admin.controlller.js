@@ -32,7 +32,6 @@ export const googleSignIn = async (request, response) => {
         return response.status(400).json({ status: false, msg: "No email matched" });
     } catch (err) {
         return response.status(500).json({ status: false, msg: "Internal Server Error" });
-
     }
 }
 export const signIn = async (request, response, next) => {

@@ -14,7 +14,7 @@ export const addtocart = async (request, response, next) => {
       if (index != -1)
         return response.status(200).json({ message: "Product already added in cart", status: true })
       else {
-        cart.cartItem.push({ productId: request.body.productId });
+        cart.cartItem.push({ productId: request.body.productId ,quantity:request.body.quantity });
         let savedCart = await cart.save({});
         return response.status(200).json({ message: "Product successfull added", status: true });
       }
@@ -45,13 +45,13 @@ export const viewCartItems = async (request, response, next) => {
   }
 }
 
-export const removeCart = async (request, response, next) => {
+export const  removeCart = async (request, response, next) => {
   try {
-    let cart = await Cart.findOne({ customerId: request.body.customerId })
+    let cart = await Cart.findOne({customerId:request.body.customerId})
+   
     if (cart) {
       let cartItemList = cart.cartItem;
       let index = cartItemList.findIndex((item) => item.productId == request.body.productId)
-      console.log(index)
       if (index != -1) {
         cart.cartItem.splice(index, 1)
         cart.save();
@@ -62,6 +62,7 @@ export const removeCart = async (request, response, next) => {
       }
     }
     else {
+      console.log(cart)
       return response.status(400).json({ error: "Bad request", status: false });
     }
   }

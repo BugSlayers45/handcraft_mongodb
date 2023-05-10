@@ -1,12 +1,9 @@
 import { Product } from "../model/product.model.js";
-import dbConfig from "../db/dbConfig.js";
-import { Category } from "../model/category.model.js";
-import { Seller } from "../model/seller.model.js";
+
 
 export const Save = async (request, response, next) => {
     try {
-        await Product.create(request.body.products)
-
+        await Product.create(request.body.products); 
         return response.status(200).json({ message: "Product saved...", status: true });
     } catch (err) {
         console.log(err);
@@ -21,6 +18,26 @@ export const productListBySellerId = async (request, response, next) => {
     } catch (err) {
         console.log(err);
         return response.status(500).json({ error: "INTERNAL SERVER ERROR", status: false })
+    }
+}
+
+export const updateProduct = async (request, response, next) => {
+    console.log("xcvbn")
+    try {
+        const product = await Product.findById(request.params._id);
+        if (product) {
+            product.title = request.body.title || product.title;
+            product.description = request.body.description || product.description;
+            product.price = request.body.price || product.price;
+            product.stock = request.body.stock || product.stock;
+            product.discountPercentage = request.body.discountPercentage || product.discountPercentage;
+            const updatedProduct = await product.save();
+            return response.status(200).json({ updatedProduct: updatedProduct, staus: true });
+        }
+    }
+    catch (err) {
+        console.log(err);
+        return response.status(500).json({ error: "Internal server error" });
     }
 }
 
@@ -52,6 +69,18 @@ export const viewProduct = async (request, response, next) => {
     } catch (err) {
         return response.status(500).json({ error: "Internal Server", status: false });
     }
+}
+
+
+export const InfProduct = async (request, response, next) => {
+    let page = parseInt(request.query.page) || 1;
+    let perPage = 10;
+    Product.find().skip((page-1)*10).limit(9).
+    then(result=>{
+        return response.status(200).json({products: result, status: true});
+    }).catch(err=>{
+        return response.status(500).json({error:"Internal Server Error", status: false});
+    })
 }
 
 export const featuresProduct = async (request, response, next) => {
@@ -99,10 +128,8 @@ export const productAdd = (request, response, next) => {
             else
                 thumbnail = file.filename
         });
-        // console.log(images);
-        // console.log(thumbnail);
-        let { title, description, price, discountPercantage, rating, stock, keyword,categoryId,sellerId } = request.body
-        Product.create(({ images: images, thumbnail: thumbnail, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword,categoryId:categoryId,sellerId:sellerId }))
+        let { title, description, price, discountPercantage, rating, stock, categoryId, sellerId, keyword } = request.body
+        Product.create(({ images: images, thumbnail: thumbnail, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, categoryId: categoryId, sellerId: sellerId, keyword: keyword }))
         return response.status(200).json({ message: "saved...", status: true });
 
     }

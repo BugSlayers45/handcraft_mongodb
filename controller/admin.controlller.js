@@ -83,7 +83,7 @@ export const sellerDeactive = (request, response, next) => {
     try {
         const count = Seller.find()
         if (count.status == "Deactive")
-            return response.status(200).json({seller: count, status: true });
+            return response.status(200).json({ seller: count, status: true });
     }
     catch (err) {
         console.log(err);

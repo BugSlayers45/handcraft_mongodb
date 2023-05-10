@@ -23,13 +23,7 @@ router.get("/:id", getProductById);
 
 router.get("/products/:categoryId",getProductByCategory)
 router.get("/search/:keyword",search)
-
 router.post("/save", uploads.any("image"),productAdd);
-// router.post("/imagesave", uploads.array("image"),imagesAdd);
-
-
-
-router.post("/search/:keyword", search)
 
 
 export default router;

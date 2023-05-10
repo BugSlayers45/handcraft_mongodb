@@ -14,54 +14,7 @@ const transporter = nodemailer.createTransport({
         pass: 'glqwzpijniaakoum',
     },
     secure: true,
-});    
-
-export const order = async (request, response, next) => {
-    try {
-        let order = await Order.create({
-            customerId: request.body.customerId,
-            deliveryAddress: request.body.deliveryAddress,
-            contactNumber: request.body.contactNumber,
-            contactPerson: request.body.contactPerson,
-            billAmount: request.body.billAmount,
-            orderItems: [{ productId: request.body.productId, qty: request.body.qty }]
-
-        })
-        // --------------------------------------------------------------------
-        let _id = order.orderItem.productId
-        // console.log(_id + "Id");
-        let product = await Product.findOne(_id);
-        console.log(product);
-        _id = product.sellerId
-        // console.log(_id + "Seller");
-        let seller = await Seller.findOne(_id);
-        // console.log(seller);
-        console.log(seller.sellerEmail +" seller email");
-        // --------------------------------------------------------------------
-        // console.log(order)
-          _id = order.customerid
-        let email = await Customer.findOne(_id);
-        const { deliveryAddress, contactNumber, contactPerson, billAmount } = request.body
-        var mailData = {
-            from: 'vikrampratapsingh628@gmail.com',
-            to: email.customerEmail,
-            subject: 'Order Confirmation',
-            // text: deliveryAddress+"",
-            html: '<b>Hey Dear! </b><br> Your order confirm and ready to deliverd<br/><br/>' + contactPerson + "<br/>" + deliveryAddress + "<br/>" + contactNumber + "<br/>" + billAmount,
-        };
-        transporter.sendMail(mailData, (error, info) => {
-            if (error) {
-                return console.log(error);
-            }
-            return response.status(200).send({ message: "Mail send", message_id: info.messageId });
-        });
-        return response.status(200).json({ message: "Order successfull placed..", status: true });
-    }
-    catch (err) {
-        console.log(err);
-        return response.status(500).json({ errro: "Internal server error", status: false });
-    }
-}
+});
 
 
 export const placeOrder = async (request, response, next) => {
@@ -101,11 +54,11 @@ export const placeOrder = async (request, response, next) => {
             })
             await order.save()
             // 
-            let _id =customerinfo.id
+            let _id = customerinfo.id
             let email = await Customer.findOne(_id);
             var mailData = {
                 from: 'mukuldixit931@gmail.com',
-                to: 'vikrampratapsingh628@gmail.com',
+                to: 'vikrampratapsingh958@gmail.com',
                 subject: 'Order Confirmation',
                 // text: deliveryAddress+"",
                 html: '<b>Hey Dear! </b><br> Your order confirm and ready to deliverd<br/><br/>' + contactPerson + "<br/>" + deliveryAddress + "<br/>" + contactNumber + "<br/>" + billAmount,
@@ -117,13 +70,8 @@ export const placeOrder = async (request, response, next) => {
                 return response.status(200).send({ message: "Mail send", message_id: info.messageId });
             });
             return response.status(200).json({ message: "Order successfull placed..", status: true });
-
-            // 
-            return response.status(200).json({ orderdetail: order, status: true })
         }
     } catch (err) {
-
-        console.log(err)
         return response.status(500).json({ error: err })
     }
 }
@@ -132,24 +80,23 @@ export const placeOrder = async (request, response, next) => {
 export const orderDetailsByCustomerIdorOrderId = async (request, response, next) => {
     try {
 
-        const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
-        console.log(customer)
+        const customer = await Customer.findById({ _id: request.params.id }) || await Order.findById({ _id: request.params.id })
+        // console.log(customer)
         if (!customer)
             return response.status(401).json({ message: "invalid user" })
         else {
-            const order = await Order.find({ $or: [{ customerid: request.body.id }, { _id: request.body.id }] }).populate({
+            const order = await Order.find({ $or: [{ customerid: request.params.id }, { _id: request.params.id }] }).populate({
                 path: "orderItem",
                 populate: { path: "product" }
             })
             if (order.length == 0)
                 return response.status(401).json({ message: "NO order Found" });
 
-            const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
-            console.log(customer)
+            const customer = await Customer.findById({ _id: request.params.id }) || await Order.findById({ _id: request.params.id })
             if (!customer)
                 return response.status(401).json({ message: "invalid user" })
             else {
-                const order = await Order.find({ $or: [{ customerid: request.body.id }, { _id: request.body.id }] }).populate({
+                const order = await Order.find({ $or: [{ customerid: request.params.id }, { _id: request.params.id }] }).populate({
                     path: "orderItem",
                     populate: { path: "product" }
                 })
@@ -160,13 +107,11 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
             }
         }
     }
-
     catch (err) {
         console.log(err)
         return response.status(500).json({ error: "INTERNAL SERVER ERROR" })
     }
 }
-
 
 export const updateOrder = async (request, response, next) => {
     try {
@@ -178,10 +123,10 @@ export const updateOrder = async (request, response, next) => {
         order = await Order.findByIdAndUpdate(
             request.params.orderId,
             {
-                status: request.body.status
+                status: "shipped"
             }, { new: true }
         )
-        return response.status(200).json({ Order: order })
+        return response.status(200).json({ Order: order, status: true })
     }
     catch (err) {
         console.log(err)

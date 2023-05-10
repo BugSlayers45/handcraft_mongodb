@@ -17,7 +17,6 @@ export const Save = async (request, response, next) => {
 export const productListBySellerId = async (request, response, next) => {
     try {
         let result = await Product.find({ sellerId: request.params.sellerId })
-        console.log(result);
         return response.status(200).json({ productsList: result, status: true })
     } catch (err) {
         console.log(err);
@@ -27,28 +26,16 @@ export const productListBySellerId = async (request, response, next) => {
 
 export const updateproducts = async (request, response, next) => {
     try {
-
-        // let search = await Product.find({ sellerId: request.body.sellerId });
-
-        // if (!search) {
-        //     return response.status(401).json({ error: "Bad request...", status: true });
-        // }
-        // else {
         let result = await Product.updateMany({ _id: request.params._id }, { title: request.body.title, description: request.body.description, price: request.body.price, stock: request.body.stock, discountPercentage: request.body.discountPercentage });
         return response.status(200).json({ result: result, status: true })
-        // }
     } catch (err) {
         console.log(err);
         return response.status(500).json({ error: "INTERNAL SERVER ERROR", status: false })
     }
 }
 
-
 export const removeProduct = async (request, response, next) => {
     try {
-        // let product = await Product.find({ sellerId: request.params.sellerId })
-        // if (!product)
-        //     return response.status(404).json({ error: "Requested resources not found", status: false });
         let status = await Product.deleteOne({ _id: request.params._id });
         return response.status(200).json({ message: "Product removed", status: true })
 
@@ -66,6 +53,7 @@ export const viewProduct = async (request, response, next) => {
         return response.status(500).json({ error: "Internal Server", status: false });
     }
 }
+
 export const featuresProduct = async (request, response, next) => {
     try {
         let product = await Product.find().limit(8)
@@ -100,21 +88,21 @@ export const getProductByCategory = (request, response, next) => {
         })
 }
 
-
 export const productAdd = (request, response, next) => {
     try {
+        // console.log(request.files);
         let thumbnail = null;
         let images = [];
         request.files.map(file => {
-            if(file.fieldname!="thum")
+            if(file.fieldname!="file")
                 images.push(file.filename)
             else
                 thumbnail = file.filename
         });
         // console.log(images);
         // console.log(thumbnail);
-        let { title, description, price, discountPercantage, rating, stock, keyword } = request.body
-        Product.create(({ images: images, thumbnail: thumbnail, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword }))
+        let { title, description, price, discountPercantage, rating, stock, keyword,categoryId,sellerId } = request.body
+        Product.create(({ images: images, thumbnail: thumbnail, price: price, title: title, description: description, discountPercentage: discountPercantage, rating: rating, stock: stock, keyword: keyword,categoryId:categoryId,sellerId:sellerId }))
         return response.status(200).json({ message: "saved...", status: true });
 
     }
@@ -123,7 +111,6 @@ export const productAdd = (request, response, next) => {
         return response.status(500).json({ error: "Internal server error", status: false });
     }
 }
-
 
 export const search = async (request, response, next) => {
     try {

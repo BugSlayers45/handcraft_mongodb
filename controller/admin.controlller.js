@@ -6,13 +6,13 @@ import { Seller } from "../model/seller.model.js";
 import { Customer } from "../model/customer.model.js";
 import { Order } from "../model/order.model.js";
 
+
 export const signUp = async (request, response, next) => {
     const errors = await validationResult(request);
     if (!errors.isEmpty())
         return response.status(400).json({ error: "Bad request", message: errors.array() })
     let saltkey = await bcrypt.genSalt(10);
     request.body.password = await bcrypt.hash(request.body.password, saltkey);
-
     let admin = Admin.create(request.body)
         .then(result => {
             return response.status(200).json({ Admin: result, status: true })
@@ -23,6 +23,18 @@ export const signUp = async (request, response, next) => {
         })
 }
 
+export const googleSignIn = async (request, response) => {
+    try {
+        let admin = await Admin.find({ email: request.body.email });
+        // console.log(admin);
+        if (admin.length)
+            return response.status(200).json({ status: true, msg: "SignIn Success", admin });
+        return response.status(400).json({ status: false, msg: "No email matched" });
+    } catch (err) {
+        return response.status(500).json({ status: false, msg: "Internal Server Error" });
+
+    }
+}
 export const signIn = async (request, response, next) => {
     try {
         let admin = await Admin.findOne({ email: request.body.email });
@@ -34,7 +46,7 @@ export const signIn = async (request, response, next) => {
                 admin = admin.toObject();
                 delete admin.password;
                 console.log(admin);
-                return response.status(200).json({ message: "signin seccess", token: token, status: true });
+                return status ? response.status(200).json({ message: "signin seccess", token: token, status: true, admin: { ...admin, password: undefined } }) : response.status(400).json({ error: "Bad request", status: false });
             }
             else
                 return response.status(401).json({ error: "Unauthorized user", status: false });
@@ -47,21 +59,29 @@ export const signIn = async (request, response, next) => {
         return response.status(500).json({ error: "Internal Server Error", status: false });
     }
 }
-
-export const sellerAproval = async (request, response, next) => {
+export const sellerApproval = async (request, response, next) => {
     const seller = await Seller.findByIdAndUpdate(request.params.id, {
         status: "Active"
     }
     )
     if (!seller)
         return response.status(400).send('this seller cannot fount...')
-    return response.status(200).json({ message: "successfull aprovel... ", status: true });
+    return response.status(200).json({ message: "successfull approvel... ", status: true });
+}
+export const sellerInActive = async (request, response, next) => {
+    const seller = await Seller.findByIdAndUpdate(request.params.id, {
+        status: "Inactive"
+    }
+    )
+    if (!seller)
+        return response.status(400).send('this seller cannot fount...')
+    return response.status(200).json({ message: "successfull approvel... ", status: true });
 }
 
 export const customerCount = (request, response, next) => {
-    const count = Customer.find()
-        .then(function (models) {
-            return response.status(200).json({ customer: models, status: true });
+    Customer.find()
+        .then(result => {
+            return response.status(200).json({ customer: result, status: true });
         })
         .catch(function (err) {
             console.log(err);
@@ -69,21 +89,22 @@ export const customerCount = (request, response, next) => {
         });
 }
 
-export const sellercount = (request, response, next) => {
-    const count = Seller.find()
-        .then(function (models) {
-            return response.status(200).json({ seller: models, status: true });
+export const sellerCount = (request, response, next) => {
+    Seller.find()
+        .then(result => {
+            return response.status(200).json({ seller: result, status: true });
         })
-        .catch(function (err) {
+        .catch(err => {
             console.log(err);
             return response.status(500).json({ error: "Internal server error", status: false });
         });
 }
+
 export const sellerDeactive = (request, response, next) => {
     try {
         const count = Seller.find()
         if (count.status == "Deactive")
-            return response.status(200).json({seller: count, status: true });
+            return response.status(200).json({ seller: count, status: true });
     }
     catch (err) {
         console.log(err);
@@ -91,12 +112,12 @@ export const sellerDeactive = (request, response, next) => {
     }
 }
 
-export const ordercount = (request, response, next) => {
-    const count = Order.find()
-        .then(function (models) {
-            return response.status(200).json({ orders: models, status: true });
+export const orderCount = (request, response, next) => {
+    Order.find()
+        .then(result => {
+            return response.status(200).json({ orders: result, status: true });
         })
-        .catch(function (err) {
+        .catch(err => {
             console.log(err);
             return response.status(500).json({ error: "Internal server error", status: false });
         });

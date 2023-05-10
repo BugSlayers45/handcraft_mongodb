@@ -9,5 +9,4 @@ const categoryScheme = new mongoose.Schema({
     }
 });
 
-
 export const Category = mongoose.model("category", categoryScheme);

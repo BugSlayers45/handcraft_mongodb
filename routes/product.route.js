@@ -16,18 +16,14 @@ router.get("/productlist/:sellerId", productListBySellerId);//sellerId In params
 router.post("/update/:_id", updateproducts);
 router.post("/delete/:_id", removeProduct);
 router.post("/updated/:_id", updateProduct);
-
 router.get("/save", addPage);
 router.get("/viewproduct", viewProduct);
 router.get("/limitLoadproduct", InfProduct);
 router.get("/featuresproduct", featuresProduct);
 router.get("/:id", getProductById);
-
 router.get("/products/:categoryId",getProductByCategory)
 router.get("/search/:keyword",search)
-
 router.post("/save", uploads.any("image"),productAdd);
-// router.post("/imagesave", uploads.array("image"),imagesAdd);
 
 
 

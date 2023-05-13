@@ -1,16 +1,11 @@
 import express from "express";
-import { getOrderDetails, placeOrder, updateOrder} from "../controller/order.controller.js";
+import { orderDetailsByCustomerIdorOrderId, placeOrder, updateOrder, allOrder, orderDetailsBySeller } from "../controller/order.controller.js";
 import { verificationToken } from "../middlewaress/tokenVerification.js";
-
-
-
 const router = express.Router();
-
-router.post("/buynow",placeOrder)
-router.post("/orderdetail",getOrderDetails)
-router.get("/updateorderstatus/:orderId",updateOrder)
-
-
-
+router.post("/buynow", placeOrder)
+router.post("/orderdetail", orderDetailsByCustomerIdorOrderId)
+router.get("/updateorderstatus/:orderId", verificationToken, updateOrder)
+router.get("/allorders", allOrder)
+router.get("/getorderbyseller/:id", orderDetailsBySeller);
 export default router
 

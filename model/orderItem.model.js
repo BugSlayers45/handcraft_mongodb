@@ -8,7 +8,10 @@ const orderItemsSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "product",
+    },
+    sellerId: {
+        type: String
     }
 })
 
-export const OrderItems = mongoose.model("OrderItems", orderItemsSchema);
+export const OrderItems = mongoose.model("orderItems", orderItemsSchema);

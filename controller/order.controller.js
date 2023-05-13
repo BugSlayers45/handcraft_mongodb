@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
+
 export const placeOrder = async (request, response, next) => {
     try {
         const orderIds = Promise.all(
@@ -95,7 +96,11 @@ export const placeOrder = async (request, response, next) => {
 }
 
 
+
+
 export const orderDetailsByCustomerIdorOrderId = async (request, response, next) => {
+
+
     try {
 
         const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
@@ -103,10 +108,12 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
         if (!customer)
             return response.status(401).json({ message: "invalid user" })
         else {
-            const order = await Order.find({ $or: [{ customerid: request.body.id }, { _id: request.body.id }] }).populate({
+            const order = await Order.find({ customerid: request.body.id }).populate({
                 path: "orderItem",
                 populate: { path: "product" }
+
             })
+            const ordercount = await Order.count({ customerid: request.body.id })
             if (order.length == 0)
                 return response.status(401).json({ message: "NO order Found" });
 

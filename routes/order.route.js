@@ -8,7 +8,7 @@ import { verificationToken } from "../middlewaress/tokenVerification.js";
 const router = express.Router();
 
 router.post("/buynow", placeOrder)
-router.get("/orderdetail", orderDetailsByCustomerIdorOrderId)
+router.post("/orderdetail", orderDetailsByCustomerIdorOrderId)
 router.get("/updateorderstatus/:orderId", verificationToken, updateOrder)
 router.get("/allorders", allOrder)
 router.get("/getorderbyseller/:id", orderDetailsBySeller);

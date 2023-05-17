@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
     port: 465,
     host: "smtp.gmail.com",
     auth: {
-        user: 'vikrampratapsingh628@gmail.com',
-        pass: 'glqwzpijniaakoum',
+        user: 'mukuldixit931@gmail.com',
+        pass: 'oxfgqzeowaciixiv',
     },
     secure: true,
 });
@@ -25,12 +25,13 @@ export const placeOrder = async (request, response, next) => {
             request.body.orderItems.map(async (orderItem) => {
                 let newOrderItems = new OrderItems({
                     quantity: orderItem.quantity,
-                    product: orderItem.product
+                    product: orderItem.productId._id
                 });
                 await newOrderItems.save();
                 return newOrderItems._id;
             })
         )
+        console.log(orderIds)
         const orderIdArray = await orderIds;
 
         const customerinfo = await Customer.findOne({ _id: request.body.customerid })
@@ -42,6 +43,7 @@ export const placeOrder = async (request, response, next) => {
                 orderIdArray.map(async (id) => {
                     const item = await OrderItems.findById(id).populate("product", "price")
                     return item.product.price * item.quantity;
+                   
                 })
             )
             const sumPrice = billAmount.reduce((a, b) => { a + b, 0 })

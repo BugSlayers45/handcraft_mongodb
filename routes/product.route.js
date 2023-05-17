@@ -1,5 +1,5 @@
 import express from "express";
-import { InfProduct, Save, addPage, featuresProduct, getProductByCategory, getProductById, productAdd, productListBySellerId, removeProduct, search, updateProduct, updateproducts, viewProduct } from "../controller/product.controller.js";
+import { InfProduct, Save, addPage, createProductReview, featuresProduct, getProductByCategory, getProductById, productAdd, productListBySellerId, removeProduct, search, updateProduct, updateproducts, viewProduct } from "../controller/product.controller.js";
 
 import verifyTokenForSeller from "../middlewares/tokenVerification.js";
 import multer from "multer";
@@ -24,6 +24,7 @@ router.get("/:id", getProductById);
 router.get("/products/:categoryId",getProductByCategory)
 router.get("/search/:keyword",search)
 router.post("/save", uploads.any("image"),productAdd);
+router.post("/addreview/reviews",createProductReview)
 
 
 

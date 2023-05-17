@@ -4,8 +4,8 @@ import { verificationToken } from "../middlewaress/tokenVerification.js";
 
 const router = express.Router();
 
-router.post('/addtowishlist',verificationToken,wishlist);
-router.post('/viewwishlist',verificationToken,fetchWishlist);
-router.post('/delete',verificationToken,removeWishlist);
+router.post('/addtowishlist',wishlist);
+router.post('/viewwishlist',fetchWishlist);
+router.post('/delete',removeWishlist);
 
 export default router;

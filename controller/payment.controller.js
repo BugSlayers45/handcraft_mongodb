@@ -1,5 +1,7 @@
 import Razorpay from "razorpay";
+// import shortid from "shortid";
 import shortid from "shortid";
+
 
 
 export const razorpay = new Razorpay({
@@ -9,7 +11,7 @@ export const razorpay = new Razorpay({
 
 
 export const payment3 = async (req, res) => {
- 
+
   const payment_capture = 1;
   const amount = req.body.totalBill;
   const currency = "INR";

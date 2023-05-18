@@ -22,7 +22,7 @@ const OrderSchema = new mongoose.Schema({
         default: "pending"
     },
     paymentMode: String,
-    orderItems:
+    orderItem:
         [
             {
                 type: mongoose.Schema.Types.ObjectId,

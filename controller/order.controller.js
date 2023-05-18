@@ -2,6 +2,7 @@ import { Customer } from "../model/customer.model.js";
 import { Order } from "../model/order.model.js";
 import nodemailer from "nodemailer";
 import { OrderItems } from "../model/orderItem.model.js";
+import mongoose from "mongoose";
 
 
 
@@ -14,6 +15,7 @@ const transporter = nodemailer.createTransport({
     },
     secure: true,
 });
+
 
 
 export const placeOrder = async (request, response, next) => {
@@ -84,7 +86,7 @@ export const placeOrder = async (request, response, next) => {
                 }
                 return response.status(200).send({ message: "Mail send", message_id: info.messageId });
             });
-            return response.status(200).json({ orderdetail: order,orderitems:orderitems, status: true })
+            return response.status(200).json({ orderdetail: order, orderitems: orderitems, status: true })
         }
     } catch (err) {
         return response.status(500).json({ error: err })
@@ -92,7 +94,11 @@ export const placeOrder = async (request, response, next) => {
 }
 
 
+
+
 export const orderDetailsByCustomerIdorOrderId = async (request, response, next) => {
+
+
     try {
         const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
         console.log(customer)
@@ -103,7 +109,9 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
             const order = await Order.find({ $or: [{ customerid: request.body.id }, { _id: request.body.id }] }).populate({
                 path: "orderItem",
                 populate: { path: "product" }
+
             })
+            const ordercount = await Order.count({ customerid: request.body.id })
             if (order.length == 0)
                 return response.status(401).json({ message: "NO order Found" });
 

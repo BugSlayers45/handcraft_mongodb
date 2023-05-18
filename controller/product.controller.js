@@ -156,3 +156,32 @@ export const search = async (request, response, next) => {
         return response.status(500).json({ error: err, status: false })
     }
 }
+export const  createProductReview=async(request,response)=>{
+   const {rating,comment,productId}=request.body
+   const product=await Product.findById(productId)
+
+   if(product){
+    const alreadyReviewed=product.reviews.find(
+        (r)=>r.customer.toString()===request.body.customerId.toString()
+    )
+    if(alreadyReviewed){
+        return response.status(400).json({message:"'Product already reviewed'",staus:false})
+    }
+    const review={
+        rating:Number(rating),
+        comment,
+        customer:request.body.customerId,
+    }
+    product.reviews.push(review)
+    product.numReviews = product.reviews.length
+    product.rating =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length
+
+    await product.save()
+    return response.status(201).json({message:"Review submitted",status:true})
+    }
+    else{
+        return response.status(400).json({message:"Product Not FOund"})
+    }
+   }

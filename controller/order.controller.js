@@ -2,9 +2,8 @@ import { Customer } from "../model/customer.model.js";
 import { Order } from "../model/order.model.js";
 import nodemailer from "nodemailer";
 import { OrderItems } from "../model/orderItem.model.js";
-import { Product } from "../model/product.model.js";
-import { Seller } from "../model/seller.model.js";
 import mongoose from "mongoose";
+
 
 
 const transporter = nodemailer.createTransport({
@@ -34,8 +33,10 @@ export const placeOrder = async (request, response, next) => {
         console.log(orderIds)
         const orderIdArray = await orderIds;
 
+
         const customerinfo = await Customer.findOne({ _id: request.body.customerid })
         console.log(customerinfo.id)
+
         if (!customerinfo)
             return response.status(401).json({ message: "No user found", status: false })
         else {
@@ -72,6 +73,7 @@ export const placeOrder = async (request, response, next) => {
             }
             var date = new Date();
             await order.save()
+
             var mailData = {
                 from: 'mukuldixit931@gmail.com',
                 to: "bugslayers45@gmail.com",
@@ -86,13 +88,9 @@ export const placeOrder = async (request, response, next) => {
                 }
                 return response.status(200).send({ message: "Mail send", message_id: info.messageId });
             });
-
             return response.status(200).json({ orderdetail: order, orderitems: orderitems, status: true })
-
         }
     } catch (err) {
-
-        console.log(err)
         return response.status(500).json({ error: err })
     }
 }
@@ -104,13 +102,13 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
 
 
     try {
-
         const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
         console.log(customer)
         if (!customer)
             return response.status(401).json({ message: "invalid user" })
         else {
-            const order = await Order.find({ customerid: request.body.id }).populate({
+
+            const order = await Order.find({ $or: [{ customerid: request.body.id }, { _id: request.body.id }] }).populate({
                 path: "orderItem",
                 populate: { path: "product" }
 
@@ -142,7 +140,6 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
     }
 }
 
-
 export const updateOrder = async (request, response, next) => {
     try {
         let order = await Order.findById(request.params.orderId)
@@ -153,10 +150,10 @@ export const updateOrder = async (request, response, next) => {
         order = await Order.findByIdAndUpdate(
             request.params.orderId,
             {
-                status: request.body.status
+                status: "shipped"
             }, { new: true }
         )
-        return response.status(200).json({ Order: order })
+        return response.status(200).json({ Order: order, status: true })
     }
     catch (err) {
         console.log(err)

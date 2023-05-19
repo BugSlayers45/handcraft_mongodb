@@ -97,14 +97,16 @@ export const featuresProduct = async (request, response, next) => {
     }
 }
 
-export const getProductById = (request, response, next) => {
-    Product.findById(request.params.id)
-        .then(result => {
-            return response.status(200).json({ product: result, status: true });
-        }).catch(err => {
-            console.log(err);
+export const getProductById =async (request, response, next) => {
+    try{
+       const  product=await Product.findById(request.params.id).populate({
+         path: 'reviews' ,populate:{path:"customer"}
+       })
+       return response.status(200).json({ product: product, status: true });  
+       }
+      catch{
             return response.status(500).json({ error: "Internal Server", status: false });
-        })
+          }
 }
 
 export const addPage = (request, response, next) => {
@@ -173,7 +175,7 @@ export const  createProductReview=async(request,response)=>{
         (r)=>r.customer.toString()===request.body.customerId.toString()
     )
     if(alreadyReviewed){
-        return response.status(400).json({message:"'Product already reviewed'",staus:false})
+        return response.status(200).json({message:"'Product already reviewed'",staus:false})
     }
     const review={
         rating:Number(rating),
@@ -183,8 +185,8 @@ export const  createProductReview=async(request,response)=>{
     product.reviews.push(review)
     product.numReviews = product.reviews.length
     product.rating =
-      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      product.reviews.length
+    product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    product.reviews.length
 
     await product.save()
     return response.status(201).json({message:"Review submitted",status:true})

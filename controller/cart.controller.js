@@ -33,13 +33,11 @@ export const addtocart = async (request, response, next) => {
   }
 }
 
-
 export const viewCartItems = async (request, response, next) => {
   try {
     let cartItems = await Cart.findOne({ customerId: request.body.customerId }).populate("cartItem.productId")
 
     return response.status(200).json({ cart: cartItems, status: true })
-
   }
   catch (err) {
     console.log(err)

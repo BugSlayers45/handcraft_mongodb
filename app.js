@@ -13,6 +13,10 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import paymentRoute from "./routes/payment.route.js";
 
+
+import multer from "multer";
+
+
 const app = express();
 app.use(cors())
 
@@ -39,6 +43,24 @@ app.get("/api/getkey", (req, res) =>
   res.status(200).json({ key: "rzp_test_mkdEsKQeQYTu1W" })
 );
 
+
+const upload = multer({ dest: 'uploads/' }); // Set the destination directory for uploaded files
+
+app.post('/image', upload.any('files'), (req, res) => {
+  try {
+    // Access the file data using req.file
+    const file = req.files;
+    console.log('File uploaded:', file);
+
+    // Send a response to the client
+    res.status(200).send('File uploaded successfully');
+  } catch (error) {
+    console.error('Error uploading file', error);
+    res.status(500).send('Error uploading file');
+  }
+});
+
 app.listen(3000, () => {
-  console.log("Server started....");
-})
+  console.log('Server started on port 3000');
+});
+

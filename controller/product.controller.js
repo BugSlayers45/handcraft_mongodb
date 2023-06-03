@@ -69,7 +69,10 @@ export const removeProduct = async (request, response, next) => {
 export const viewProduct = async (request, response, next) => {
     try {
         let product = await Product.find()
+        if(!product)
+        return response.status(401).json({ products:"Product not Found", status: true });
         return response.status(200).json({ products: product, status: true });
+       
     } catch (err) {
         return response.status(500).json({ error: "Internal Server", status: false });
     }

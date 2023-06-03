@@ -12,7 +12,6 @@ export const SignIn = async (request, response, next) => {
 
         let status = responseType ? await bcrypt.compare(request.body.customerPassword, customer.customerPassword) : false;
         // console.log(status);
-
         if (status) {
             let payload = { subject: Customer.customerEmail }
             let token = Jwt.sign(payload, 'fdgljfiofojffjdfjdfkjof')

@@ -15,12 +15,8 @@ import paymentRoute from "./routes/payment.route.js";
 
 const app = express();
 app.use(cors())
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-
-app.set("view-engine", "ejs");
 app.use("/customer", CustomerRouter);
 app.use("/product", ProductRouter);
 app.use("/cart", CartRouter);
@@ -38,7 +34,6 @@ app.use("/api", paymentRoute);
 app.get("/api/getkey", (req, res) =>
   res.status(200).json({ key: "rzp_test_mkdEsKQeQYTu1W" })
 );
-
 app.listen(3000, () => {
   console.log("Server started....");
 })

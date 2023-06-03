@@ -32,11 +32,7 @@ export const placeOrder = async (request, response, next) => {
         )
       
         const orderIdArray = await orderIds;
-
-
         const customerinfo = await Customer.findOne({ _id: request.body.customerid })
-        console.log(customerinfo.id)
-
         if (!customerinfo)
             return response.status(401).json({ message: "No user found", status: false })
         else {

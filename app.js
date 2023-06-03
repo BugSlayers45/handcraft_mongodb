@@ -19,12 +19,8 @@ import multer from "multer";
 
 const app = express();
 app.use(cors())
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-
-app.set("view-engine", "ejs");
 app.use("/customer", CustomerRouter);
 app.use("/product", ProductRouter);
 app.use("/cart", CartRouter);
@@ -42,16 +38,12 @@ app.use("/api", paymentRoute);
 app.get("/api/getkey", (req, res) =>
   res.status(200).json({ key: "rzp_test_mkdEsKQeQYTu1W" })
 );
-
-
 const upload = multer({ dest: 'uploads/' }); // Set the destination directory for uploaded files
-
 app.post('/image', upload.any('files'), (req, res) => {
   try {
     // Access the file data using req.file
     const file = req.files;
     console.log('File uploaded:', file);
-
     // Send a response to the client
     res.status(200).send('File uploaded successfully');
   } catch (error) {

@@ -116,7 +116,7 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
             })
             const ordercount = await Order.count({ customerid: request.body.id })
             if (order.length == 0)
-                return response.status(401).json({ message: "NO order Found" });
+                return response.status(200).json({ message: "NO order Found",status:false });
 
             const customer = await Customer.findById({ _id: request.body.id }) || await Order.findById({ _id: request.body.id })
             if (!customer)
@@ -127,7 +127,7 @@ export const orderDetailsByCustomerIdorOrderId = async (request, response, next)
                     populate: { path: "product" }
                 })
                 if (order.length == 0)
-                    return response.status(401).json({ message: "NO order Found" });
+                    return response.status(401).json({ message: "NO order Found",status:false });
 
                 return response.status(200).json({ order, status: true })
             }

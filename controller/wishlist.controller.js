@@ -28,7 +28,6 @@ export const wishlist = async (request, response, next) => {
   }
 }
 
-
 export const fetchWishlist = async (request, response, next) => {
   try {
     let wishlistItems = await Wishlist.findOne({ customerId: request.body.customerId }).populate("wishlistItems.productId")

@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.post("/buynow", placeOrder)
-router.get("/orderdetail", orderDetailsByCustomerIdorOrderId)
+router.post("/orderdetail", orderDetailsByCustomerIdorOrderId)
 router.put("/updateorderstatus/:orderId", updateOrder)
 router.get("/allorders", allOrder)
 router.get("/getorderbyseller/:id", orderDetailsBySeller);

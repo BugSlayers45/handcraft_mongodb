@@ -23,9 +23,7 @@ export const SignIn = async (request, response, next) => {
 }
 
 export const SingUp = async (request, response, next) => {
-    console.log(" sign up called");
     try {
-        console.log("called");
         let saltkey = await bcrypt.genSalt(10);
         let encryptedPassword = await bcrypt.hash(request.body.customerPassword, saltkey);
         request.body.customerPassword = encryptedPassword;
